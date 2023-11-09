@@ -5,25 +5,48 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class FirebaseStorageScreen extends StatelessWidget {
+class FirebaseStorageScreen extends StatefulWidget {
   const FirebaseStorageScreen({super.key});
+
+  @override
+  State<FirebaseStorageScreen> createState() => _FirebaseStorageScreenState();
+}
+
+class _FirebaseStorageScreenState extends State<FirebaseStorageScreen> {
+  File? imageFile;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Firebase Storage')),
       body: Center(
-        child: ElevatedButton(
-            onPressed: () async {
-              var imageFile = await pickImage();
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            imageFile != null
+                ? Image.file(imageFile!)
+                : Container(
+                    decoration: BoxDecoration(border: Border.all()),
+                    child: const Padding(
+                      padding: EdgeInsets.all(64.0),
+                      child: Text("No Image"),
+                    ),
+                  ),
+            ElevatedButton(
+                onPressed: () async {
+                  imageFile = await pickImage();
+                  setState(() {});
+                  
 
-              if (imageFile != null) {
-                var imageLink = await getImageLink(imageFile);
+                  if (imageFile != null) {
+                    var imageLink = await getImageLink(imageFile!);
 
-                print(imageLink);
-              }
-            },
-            child: const Text('Upload Image')),
+                    print(imageLink);
+                  }
+                },
+                child: const Text('Upload Image')),
+          ],
+        ),
       ),
     );
   }
